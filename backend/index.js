@@ -7,8 +7,12 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+
 app.use(cors({
 	origin: 'http://localhost:5173',
+}));
+app.use(cors({
+  origin: 'https://tiktok-battle.onrender.com',
 }));
 
 const db = new sqlite3.Database('tiktok-battle.db');
