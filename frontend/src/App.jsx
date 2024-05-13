@@ -58,11 +58,11 @@ function URLForm({ onSubmit }) {
 function Test(){
 	return (
 		<div
-	  	style={{
+		style={{
 		width: '300px',
 		height: '300px',
 		backgroundColor: 'blue'
-	  	}}
+		}}
 		></div>
 	)
 }
@@ -138,29 +138,29 @@ function App() {
 
 	async function loadVoting() {
 		// Make the first API request to get a random URL
-	    const response1 = await fetch(api+'/get-random', {
-	        method: 'GET',
-	        headers: {
-	            'Content-Type': 'application/json',
-	        }
-	    });
+		const response1 = await fetch(api+'/get-random', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
 
-	    const response2 = await fetch(api+'/get-random', {
-	        method: 'GET',
-	        headers: {
-	            'Content-Type': 'application/json',
-	        }
-	    });
+		const response2 = await fetch(api+'/get-random', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
 
-	    const data1 = await response1.json();
-	    const parsedURL1 = parseTikTokURL(data1.url);
+		const data1 = await response1.json();
+		const parsedURL1 = parseTikTokURL(data1.url);
 
-	    const data2 = await response2.json();
-	    const parsedURL2 = parseTikTokURL(data2.url);
+		const data2 = await response2.json();
+		const parsedURL2 = parseTikTokURL(data2.url);
 
-	    createEmbed([parsedURL1, parsedURL2]);
+		createEmbed([parsedURL1, parsedURL2]);
 
-	    const button1 = document.createElement('button')
+		const button1 = document.createElement('button')
 		button1.textContent = 'Vote'
 		document.getElementById('buttons').appendChild(button1)
 

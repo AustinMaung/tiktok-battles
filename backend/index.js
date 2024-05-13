@@ -16,19 +16,19 @@ const db = new sqlite3.Database('tiktok-battle.db');
 db.serialize(() => {
   // Create videos table
   db.run(`
-    CREATE TABLE IF NOT EXISTS videos (
-      id INTEGER PRIMARY KEY,
-      url TEXT,
-      votes INTEGER DEFAULT 0
-    )
+	CREATE TABLE IF NOT EXISTS videos (
+	  id INTEGER PRIMARY KEY,
+	  url TEXT,
+	  votes INTEGER DEFAULT 0
+	)
   `);
 
   // Create history table
   db.run(`
-    CREATE TABLE IF NOT EXISTS history (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      winner TEXT
-    )
+	CREATE TABLE IF NOT EXISTS history (
+	  id INTEGER PRIMARY KEY AUTOINCREMENT,
+	  winner TEXT
+	)
   `);
 });
 
@@ -191,18 +191,19 @@ app.post('/add-vote', (req, res) => {
 	});
 });
 
-let lastRandom = null;
+let previousRandoms = [];
+
 app.get('/get-random', (req, res) => {
-	// SQL query to select a random entry that is not the same as the last random entry
+	// SQL query to select a random entry that is not in the previousRandoms array
 	let query;
-	if (lastRandom === null) {
+	if (previousRandoms.length === 0) {
 		query = `SELECT url FROM videos ORDER BY RANDOM() LIMIT 1;`;
 	} else {
-		query = `SELECT url FROM videos WHERE url != ? ORDER BY RANDOM() LIMIT 1;`;
+		query = `SELECT url FROM videos WHERE url NOT IN (${previousRandoms.map(() => '?').join(', ')}) ORDER BY RANDOM() LIMIT 1;`;
 	}
 
 	// Execute the query
-	db.get(query, [lastRandom], (err, row) => {
+	db.get(query, previousRandoms, (err, row) => {
 		if (err) {
 			console.error(err.message);
 			res.status(500).send('Internal Server Error');
@@ -210,7 +211,12 @@ app.get('/get-random', (req, res) => {
 		}
 
 		if (row) {
-			lastRandom = row.url;
+			previousRandoms.push(row.url);
+			console.log(row);
+			// If the number of previous randoms exceeds a certain threshold, remove the oldest one
+			if (previousRandoms.length > 10) {
+				previousRandoms.shift();
+			}
 			res.json({ url: row.url });
 		} else {
 			res.status(404).json({ error: 'No entries found' });
