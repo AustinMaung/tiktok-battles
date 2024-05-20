@@ -31,4 +31,4 @@ TikTok Battle is a platform where users can upload and compare their favorite Ti
 
 ## Demo
 
-[Link to live demo](https://tiktok-battle-demo.com)
+[Link to live demo](https://tiktok-battle.onrender.com/)
